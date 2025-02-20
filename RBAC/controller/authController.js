@@ -41,11 +41,12 @@ export default class AuthController{
     }
 
     static async registerUser(data){
+
         const {firstName, lastName, email,password} = data;
         for(const key of ["firstName", "lastName","email","password"]){
             if(!data[key]){
                 return {status:'error',
-                        messsage:`${key} field is required`
+                        message:`${key} field is required`
                 }
             }
         };
@@ -53,14 +54,14 @@ export default class AuthController{
 
         if( await User.findOne( {where: {email}})){
             return {status:'error',
-                messsage:`this email already exists`
+                message:`this email already exists`
         };
         };
 
         const passwordRegex =  /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
         if(!passwordRegex.test(password)){
             return {status:'error',
-                messsage:`password must be 8-20 characters long and contain at least one letter and one number`
+                message:`password must be 8-20 characters long and contain at least one letter and one number`
         };
         };
 
@@ -83,26 +84,30 @@ export default class AuthController{
         }
     }
 
-    static async login(data){
-        const {email,password,res} = data;
-        for(const key of ["email", "password"]){
-            if(!data[key]){
-                return {status:'error',
-                        messsage:`${key} field is required`
-                }
-            }
-        };
+    static async login(email, password,res){
+        if (!email) {
+            return { status: "error", message: "Email field is required" };
+        }
+        if (!password) {
+            return { status: "error", message: "Password field is required" };
+        }
 
         const user = await User.findOne( {where: {email}});
         if(!user){
             return {status:'error',
-                messsage:`email or password is invailed`
+                message:`email or password is invailed`
         };
         };
+        if (!user.password) {
+            return {
+              status: "error",
+              message: "This account was created using Google. Please log in with Google.",
+            };
+          }
         const comparePassword = await bcrypt.compare(password, user.password);
         if(!comparePassword){
             return {status:'error',
-                messsage:`email or password is invailed`
+                message:`email or password is invailed`
         };
         };
         const userId = user.id;

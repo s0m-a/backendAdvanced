@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import {Toaster,toast} from 'react-hot-toast'
 import Navbar from "./components/navbar";
-import UserProviderWrapper from "./components/UserProviderWrapper";
+
 
 
 
@@ -28,10 +28,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased text-gray-500 capitalize`}
       >  
-      <UserProviderWrapper>
         <Toaster />
+        <Navbar />
         {children}
-      </UserProviderWrapper>
       </body>
     </html>
   );

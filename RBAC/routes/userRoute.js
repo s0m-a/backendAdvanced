@@ -1,5 +1,5 @@
 import express from 'express'
-import UserController from '../controller/userCoontroller.js';
+import UserController from '../controller/userController.js';
 import {authenticateJWT, adminMiddleware} from '../middleware/protectedRoute.js'
 import checkRole from '../middleware/roleMiddleware.js';
 const router = express.Router();

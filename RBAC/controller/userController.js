@@ -26,7 +26,7 @@ export default  class UserController{
         for(const key of ["firstName", "lastName", "email"]){
             if(!data[key]){
                 return {status:'error',
-                        messsage:`${key} field is required`
+                        message:`${key} field is required`
                 }
             }
         };
@@ -34,14 +34,14 @@ export default  class UserController{
         if(!user){
             return {
                 status:'error',
-                messsage:"user not found, please log in"
+                message:"user not found, please log in"
                 }
     }
     const checkEmail = await User.findOne({ where: { email, id: { [Op.ne]: userId } } });
     if(checkEmail){
         return {
             status:'error',
-            messsage:"this email already exits"
+            message:"this email already exits, chose another"
             }
     }
     user.firstName = firstName;
@@ -49,7 +49,7 @@ export default  class UserController{
     user.email = email;
     await user.save();
     return {status:'success',
-        messsage:`user profile updated`,
+        message:`user profile updated`,
     }
 }
 

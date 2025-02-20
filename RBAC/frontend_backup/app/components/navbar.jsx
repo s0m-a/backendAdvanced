@@ -2,22 +2,21 @@
 //navbar.jsx
 import React from 'react'
 import Link from 'next/link'
-import {useUser} from '../../context/UserContext'
+import { useUserStore } from '../../context/useUserStore';
 import {  usePathname, useRouter } from "next/navigation";
 import axiosInstance from '../../lib/axios';
 import toast from 'react-hot-toast';
 
 const Navbar = () => {
-  const { user,logout, loading } = useUser();
+  const { user,logout, loading } = useUserStore();
   const pathname = usePathname();
   const router = useRouter()
 
 const logoutUser = async ()=>{
   try {
-    await logout();
-    router.push("/"); 
+    await logout(router);
   } catch (error) {
-    console.error("Login failed:", error);
+    console.error("Logout failed:", error);
     const errorMessage = error.response?.data?.messsage || "login failed!";
     toast.error( errorMessage);   
   }
@@ -39,7 +38,7 @@ const logoutUser = async ()=>{
                         className="text-white capitalize border p-2 rounded-lg hover:bg-white hover:text-gray-500 hover:border-customGreen shadow-md"
                         ><button className="btn">Admin dashboard</button></Link>}
 
-                        {user.role === "manager" && <Link href="/manager"
+                        {user.role === "manager" && <Link href="/manager/dashboard"
                         className="text-white capitalize border p-2 rounded-lg hover:bg-white hover:text-gray-500 hover:border-customGreen shadow-md"
                         ><button className="btn">Manager dashboard</button></Link>}
 
@@ -50,7 +49,7 @@ const logoutUser = async ()=>{
                         >Logout</button>
                     </>
                 ) : (
-                  pathname !== "/auth/login" && (
+                  pathname !== "/auth/login" && pathname !== "/auth/register" && (
                     <Link href="/auth/login">
                       <button className="btn">Login</button>
                     </Link>

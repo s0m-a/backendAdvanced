@@ -37,6 +37,9 @@ passport.use( new googleStrategy({
     profile, //Contains the user's Google account details
     done //Finalizes authentication and passes the user profile
 )=>{
+    if (!profile || !profile.id) {
+        return done(new Error("Profile is missing"), null);
+    }
     const id = profile.id; // Access the ID directly from profile
     const givenName = profile.name.givenName; // Access givenName
     const familyName = profile.name.familyName; // Access familyName
@@ -126,17 +129,16 @@ router.get("/auth/github/callback",
     }
   );
 
+
 router.post('/auth/register', async(req, res)=>{
 const {firstName, lastName, email, password} = req.body;
 
 try {
     const response = await AuthController.registerUser({firstName, lastName, email, password});
     if(response.status === 'success'){
-        res.status(201).json(response);
-        return response.message;
+        return res.status(201).json(response);
     }else{
-        res.status(400).json(response);
-        return response.message;
+        return res.status(400).json(response);
     }
 } catch (error) {
     console.error('Registration error:', error);
@@ -146,13 +148,12 @@ try {
 
 // Route for user login
 router.post('/auth/login', async (req, res) => {
-    const response = await AuthController.login({ ...req.body, res });
+    const {email, password} = req.body;
+    const response = await AuthController.login(email, password, res );
     if(response.status === 'success'){
-        res.status(201).json(response);
-        return response.message;
+        return res.status(201).json(response);
     }else{
-        res.status(400).json(response);
-        return response.message;
+        return res.status(400).json(response);
     }
 });
 
@@ -184,16 +185,11 @@ router.post('/auth/refresh',authenticateJWT, async (req, res) => {
 });
 
 router.get("/auth/profile", authenticateJWT, async (req, res) => {
-    try {
-
-        if (!req.user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        res.json(req.user);
-    } catch (error) {
-        console.error("Error fetching user profile:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
+	try {
+		res.json(req.user);
+	} catch (error) {
+		res.status(500).json({ message: "Server error", error: error.message });
+	}
 });
 
 

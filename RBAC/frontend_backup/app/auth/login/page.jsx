@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import React from 'react'
-import { useUser } from '../../../context/UserContext';
+import { useUserStore } from '../../../context/useUserStore';
 
 
 const Login = () => {
@@ -15,7 +15,7 @@ const Login = () => {
         email: '',
         password: ''
     })
-    const { login, loading,dispatch } = useUser();
+    const { login, loading, GoogleRegister, GithubRegister  } = useUserStore();
 
     const handleChange = (e)=>{
         const {name, value} = e.target;
@@ -27,36 +27,13 @@ const Login = () => {
      const loginUser = async (e)=>{
         e.preventDefault();
         try {
-         await login(formData);
-          router.push("/"); 
+          await login(formData.email, formData.password, router);
         } catch (error) {
           console.error("Login failed:", error);
           const errorMessage = error.response?.data?.messsage || "login failed!";
           toast.error( errorMessage);   
         }
      }
-
-    const GoogleRegister = async()=>{
-      dispatch({ type: "SET_LOADING", payload: true });
-        try{
-           window.location.href = "http://localhost:3001/api/auth/google";  // Redirects to backend route
-          console.log( window.location.href)
-        }catch(error){
-          const errorMessage = error.response.data?.messsage || "Registration failed!"
-        }
-        dispatch({ type: "SET_LOADING", payload: false });
-      }
-
-      const GithubRegister = async()=>{
-        dispatch({ type: "SET_LOADING", payload: true });
-        try{
-           window.location.href = "http://localhost:3001/api/auth/google";  // Redirects to backend route
-          console.log( window.location.href)
-        }catch(error){
-          const errorMessage = error.response.data?.messsage || "Registration failed!"
-        }
-        dispatch({ type: "SET_LOADING", payload: false });
-      }
 
   return (
     <div>

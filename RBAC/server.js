@@ -11,8 +11,15 @@ import  cookieParser from 'cookie-parser'
 
 const app = express();
 dotenv.config();
+
+
+const allowedOrigins = [
+    "http://localhost:3000",  // Allow localhost
+    "http://172.20.10.13:3000" // Allow local network IP
+  ];
+  
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: allowedOrigins,
     credentials: true,
 };
 
@@ -23,6 +30,7 @@ app.use(cors(corsOptions));
 
 
 app.use('/api', authRouter);
+
 app.use('/api', userRoute);
 app.use('/api/admin', adminRoute);
 app.use('/api/manager', managerRoute);
@@ -37,7 +45,7 @@ app.use('/api/manager', managerRoute);
 app.listen(PORT, async ()=>{
     const isAlive = await dbstorage.checkLife();
     if(!isAlive){
-        console.error('connected successfully to the database error:');
+        console.error('connection to the database error:');
         return;
     }
 

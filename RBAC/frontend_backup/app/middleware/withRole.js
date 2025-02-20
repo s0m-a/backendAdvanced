@@ -1,12 +1,12 @@
 "use client";
-import { useUser } from "../../context/UserContext";
+import { useUserStore } from "../../context/useUserStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 export default function withRole(WrappedComponent, allowedRoles) {
   return function ProtectedComponent(props) {
-    const { user, checkingAuth } = useUser();
+    const { user, checkingAuth } = useUserStore();
     const router = useRouter();
 
     useEffect(() => {

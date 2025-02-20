@@ -1,15 +1,12 @@
 'use client'
 import withRole from "../../middleware/withRole"
-import axiosInstance from "../../../lib/axios"
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import AdminNav from '../../components/adminNav'
 const AdminDashboard = () => {
 
   
   return (
     <div>
-<AdminNav />
+      <p className="m-4 text-center capitalize text-lg">welcome to admins dashboard, click on the links above  </p>
+      <p className="m-4 text-center capitalize" >project by nmesoma ogbenna</p>
     </div>
   )
 }

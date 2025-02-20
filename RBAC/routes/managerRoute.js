@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.use(authenticateJWT, checkRole('manager'));
 
-router.get('/allUsers',async (req, res)=>{
+router.get('/dashboard/allUsers',async (req, res)=>{
         try {
         const userId = req.user.userId;
         const response = await ManagerController.viewAssignedUser(userId);
@@ -18,7 +18,7 @@ router.get('/allUsers',async (req, res)=>{
 })
 
 
-router.delete('/deleteUser',async (req, res)=>{
+router.delete('/dashboard/deleteUser',async (req, res)=>{
     try {
     const {userId} = req.body;
     const response = await ManagerController.deleteUserbyId(userId);

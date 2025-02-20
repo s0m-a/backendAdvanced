@@ -19,9 +19,7 @@ const TOKEN_ACCESS_SECRET_KEY = process.env.TOKEN_ACCESS_SECRET_KEY;
         }
     }
     export const adminMiddleware = (req, res, next) => {
-        console.log(req.user.role)
         if (req.user && req.user.role === "admin") {
-          
             next();
         } else {
             return res.status(403).json({ message: "Access denied - Admin only" });

@@ -1,12 +1,12 @@
 'use client'
 import { ArrowRight, Loader, Lock, Mail, User } from 'lucide-react';
-import axiosInstance from "@/lib/axios";
+import axiosInstance from "../../../lib/axios";
 import {toast} from 'react-hot-toast';
 import { useState } from "react";
 import Link from 'next/link';
 import React from 'react'
-import { useUser } from '@/context/UserContext';
 import { useRouter } from "next/navigation";
+import { useUserStore } from '../../../context/useUserStore.jsx';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -15,46 +15,18 @@ const Register = () => {
         email: '',
         password: ''
     });
-    const { signup, dispatch,loading } = useUser(); 
+    const { signup,loading,GoogleRegister, GithubRegister  } = useUserStore(); 
     const router = useRouter();
 
     const registerUser = async(e)=>{
-      
         e.preventDefault();
-        dispatch({ type: "SET_LOADING", payload: true });// Start loading
       try {
-        await signup(formData)
-        router.push("/auth/login"); 
+        await signup(formData, router)
       } catch (error) {
-        const errorMessage = error.response.data?.messsage || "Registration failed!";
+        const errorMessage = error.response?.data?.messsage || "Registration failed!";
         toast.error( errorMessage);
         console.error(error)
       }
-      finally {
-        dispatch({ type: "SET_LOADING", payload: false }); // Stop loading
-    }
-    }
-    const GoogleRegister = async()=>{
-      dispatch({ type: "SET_LOADING", payload: true });
-      try{
-         window.location.href = "http://localhost:3001/api/auth/google";  // Redirects to backend route
-        console.log( window.location.href)
-      }catch(error){
-        const errorMessage = error.response.data?.messsage || "Registration failed!"
-      }
-      dispatch({ type: "SET_LOADING", payload: false });
-    }
-
-    const GithubRegister = async()=>{
-      dispatch({ type: "SET_LOADING", payload: true }); 
-      try{
-        
-         window.location.href = "http://localhost:3001/api/auth/github";  // Redirects to backend route
-        console.log( window.location.href)
-      }catch(error){
-        const errorMessage = error.response.data?.messsage || "Registration failed!"
-      }
-      dispatch({ type: "SET_LOADING", payload: false }); 
     }
 
     const handleChange = (e) =>{
